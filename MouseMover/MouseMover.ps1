@@ -1,7 +1,7 @@
 # How the script works:
 #     Add-Type: This part adds the necessary Windows API functions for mouse movement (SetCursorPos) and to get the cursor's position (GetCursorPos).
 #     Get-IdleTime: This function calculates the idle time of the system by getting the last input time and comparing it to the current time.
-#     Move-MouseLeftRight: This function moves the mouse 10 pixels right, waits for 5 seconds, and if still idle, moves it 10 pixels left.
+#     Move-MouseLeftRight: This function moves the mouse 10 pixels right, waits for 5 seconds, and if still idle, moves it 10 pixels left, then returns to the original position.
 #     Main Loop: The script continuously checks the idle time, and if the idle time is greater than 5 seconds, it moves the mouse right and left.
 
 # Usage:
@@ -72,6 +72,7 @@ function Move-MouseLeftRight {
     if ($idleTime -gt 5) {
         [MouseMover]::SetCursorPos($xLeft, $centerY)
         Start-Sleep -Milliseconds $speed
+        [MouseMover]::SetCursorPos($centerX, $centerY)
     }
 }
 
