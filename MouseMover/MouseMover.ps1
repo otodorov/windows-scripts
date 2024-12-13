@@ -1,12 +1,12 @@
 # How the script works:
 #     Add-Type: This part adds the necessary Windows API functions for mouse movement (SetCursorPos) and to get the cursor's position (GetCursorPos).
 #     Get-IdleTime: This function calculates the idle time of the system by getting the last input time and comparing it to the current time.
-#     Move-MouseLeftRight: This function moves the mouse 10 pixels right, waits for 5 seconds, and if still idle, moves it 10 pixels left, then returns to the original position.
-#     Main Loop: The script continuously checks the idle time, and if the idle time is greater than 5 seconds, it moves the mouse right and left.
+#     Move-MouseUpDown: This function moves the mouse 10 pixels up, waits for 5 seconds, and if still idle, moves it 10 pixels down, then returns to the original position.
+#     Main Loop: The script continuously checks the idle time, and if the idle time is greater than 5 seconds, it moves the mouse up and down.
 
 # Usage:
 #     Save this script as a .ps1 file and run it using PowerShell.
-#     The script continuously checks for idle time and moves the mouse right and left after 5 seconds of idle time.
+#     The script continuously checks for idle time and moves the mouse up and down after 5 seconds of idle time.
 
 # Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
@@ -54,7 +54,7 @@ function Get-IdleTime {
     return $idleTime
 }
 
-function Move-MouseLeftRight {
+function Move-MouseUpDown {
     param (
         [int]$centerX,
         [int]$centerY,
@@ -62,15 +62,15 @@ function Move-MouseLeftRight {
         [int]$speed = 50
     )
 
-    $xRight = $centerX + $distance
-    $xLeft = $centerX - $distance
+    $yUp = $centerY - $distance
+    $yDown = $centerY + $distance
 
-    [MouseMover]::SetCursorPos($xRight, $centerY)
+    [MouseMover]::SetCursorPos($centerX, $yUp)
     Start-Sleep -Seconds 5
 
     $idleTime = (Get-IdleTime).TotalSeconds
     if ($idleTime -gt 5) {
-        [MouseMover]::SetCursorPos($xLeft, $centerY)
+        [MouseMover]::SetCursorPos($centerX, $yDown)
         Start-Sleep -Milliseconds $speed
         [MouseMover]::SetCursorPos($centerX, $centerY)
     }
@@ -81,7 +81,7 @@ while ($true) {
     if ($idleTime -gt 5) {
         $mousePos = New-Object "MouseMover+POINT"
         [MouseMover]::GetCursorPos([ref]$mousePos)
-        Move-MouseLeftRight -centerX $mousePos.X -centerY $mousePos.Y
+        Move-MouseUpDown -centerX $mousePos.X -centerY $mousePos.Y
     }
     Start-Sleep -Milliseconds 500
 }
