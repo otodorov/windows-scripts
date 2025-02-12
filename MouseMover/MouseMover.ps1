@@ -2,11 +2,11 @@
 #     Add-Type: This part adds the necessary Windows API functions for mouse movement (SetCursorPos) and to get the cursor's position (GetCursorPos).
 #     Get-IdleTime: This function calculates the idle time of the system by getting the last input time and comparing it to the current time.
 #     Move-MouseUpDown: This function moves the mouse 10 pixels up, waits for 5 seconds, and if still idle, moves it 10 pixels down, then returns to the original position.
-#     Main Loop: The script continuously checks the idle time, and if the idle time is greater than 5 seconds, it moves the mouse up and down.
+#     Main Loop: The script continuously checks the idle time, and if the idle time is greater than 5 seconds, it moves the mouse up and down and prints a dot to the console.
 
 # Usage:
 #     Save this script as a .ps1 file and run it using PowerShell.
-#     The script continuously checks for idle time and moves the mouse up and down after 5 seconds of idle time.
+#     The script continuously checks for idle time and moves the mouse up and down after 5 seconds of idle time, and prints a dot to the console.
 
 # Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
@@ -82,6 +82,7 @@ while ($true) {
         $mousePos = New-Object "MouseMover+POINT"
         [MouseMover]::GetCursorPos([ref]$mousePos)
         Move-MouseUpDown -centerX $mousePos.X -centerY $mousePos.Y
+        Write-Host -NoNewline "."
     }
     Start-Sleep -Milliseconds 500
 }
